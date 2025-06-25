@@ -1,7 +1,4 @@
 # 🏰 Mickey's Magical Park Adventure — 
-
-# Mickey Mouse Adventure Game
-
 ## 🧩 Overview
 
 This is a simple **Python terminal-based game** where you control Mickey Mouse through fun activities like riding a rollercoaster, helping Donald, dancing with Minnie, and dealing with Pete’s anger.
