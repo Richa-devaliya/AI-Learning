@@ -9,7 +9,6 @@ energy:	Mickey’s stamina — needed for actions
 fun:	Mickey’s happiness meter
 mood:	Current mood: happy, tired, blocked
 repeat(n):	Repeat fun actions (like dancing or tail wag)
+with_friends:	Boosts fun when Donald or Minnie or Goofy is present
 block_if_angry:	Blocks action if Pete is angry
-with_friends:	Boosts fun when Donald or Goofy is present
-cooldown(n):	Prevents actions from repeating too quickly
-
+calmdown:	In order to perform actions we need to resolve the conflict with pete
