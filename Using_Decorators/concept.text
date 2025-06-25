@@ -1,0 +1,14 @@
+💡 Concept Overview
+You control Mickey Mouse in a magical Disney park. 
+Mickey performs fun actions (like dancing, helping Donald, riding coasters). 
+Each action is a function and game rules are managed by Python decorators.
+
+🧠 In-Game Concepts
+Term	Meaning
+energy:	Mickey’s stamina — needed for actions
+fun:	Mickey’s happiness meter
+mood:	Current mood: happy, tired, blocked
+repeat(n):	Repeat fun actions (like dancing or tail wag)
+with_friends:	Boosts fun when Donald or Minnie or Goofy is present
+block_if_angry:	Blocks action if Pete is angry
+calmdown:	In order to perform actions we need to resolve the conflict with pete
