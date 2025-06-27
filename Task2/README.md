@@ -26,16 +26,7 @@ subject_list = {
 
 subject = subject_list[level]
 
-## 🚀 Features
 
-- Uses `Enum` to manage:
-  - Student level: Primary, Middle, High
-  - Formatting style: f-string, `%`, `.format()`
-- Dynamic subject list based on standard
-- Clean HTML output with inline styling
-- Type-safe and extensible code
-
----
 
 ## 📚 Enum Design
 
