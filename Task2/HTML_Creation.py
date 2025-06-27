@@ -1,45 +1,90 @@
-# String formatting examples
+# if standard from 1-4 then take only 4 subject marks i.e. Maths, Science, English, and Hindi ; for standard 5-10 take 6 subject marks i.e. Maths, Science, English, Hindi, History, and Geography; for standard 11-12 take 5 subject marks i.e. Maths, Physics, Chemistry, Biology, and English.
+# i am using html template and f-string for standard 1-4 and i will use % string for standard 5-10 and i will be using format method for printting standard 11-12 marksheet.
+
+# ============================ ENUM DEFINITIONS ============================ #
+from enum import Enum, auto
+# Enum for categorizing students by standard level
+class StandardLevel(Enum):
+    PRIMARY = auto()
+    MIDDLE = auto()
+    HIGH = auto()
+
+    # Subjects for each level
+    def subject(self):
+        return{StandardLevel.PRIMARY: ['Maths', 'Science', 'English', 'Hindi'],
+            StandardLevel.MIDDLE: ['Maths', 'Science', 'English', 'Hindi', 'History', 'Geography'],
+            StandardLevel.HIGH: ['Maths', 'Physics', 'Chemistry', 'Biology', 'English']
+        }[self]
+        
+    # Formatter method for each level
+    def formatter(self):
+        return {
+            StandardLevel.PRIMARY: FormatterType.F,
+            StandardLevel.MIDDLE: FormatterType.PERCENT,
+            StandardLevel.HIGH: FormatterType.FORMAT
+        }[self]
+        
+    # Custom string and debug output
+    def __str__(self):
+        return self.name.capitalize()
+
+    def __repr__(self):
+        return f'StandardLevel.{self.name}'
+
+# Enum to represent different formatting techniques
+class FormatterType(Enum):
+    F = auto()         # f-string formatting
+    PERCENT = auto()   # % formatting
+    FORMAT = auto()    # .format() method
+    
+    def __str__(self):
+        return self.name.lower()
+
+    def __repr__(self):
+        return f'FormatterType.{self.name}'
+    
+# ============================ USER INPUT SECTION ============================ #
+
 f_name = input('Enter your first name: ')
 l_name = input('Enter your last name: ')
 standard = input('Enter your standard (1-12): ')
 
-if standard.isdigit():
-    standard = int(standard)
-else:
+# Input validation for standard
+if not standard.isdigit():
     print("Please enter a valid standard between 1 and 12.")
     exit()
-    
-if standard < 1 or standard > 12:
+
+standard = int(standard)
+if not (1 <= standard <= 12):
     print("Please enter a valid standard between 1 and 12.")
     exit()
-# if standard from 1-4 then take only 4 subject marks i.e. Maths, Science, English, and Hindi ; for standard 5-10 take 6 subject marks i.e. Maths, Science, English, Hindi, History, and Geography; for standard 11-12 take 5 subject marks i.e. Maths, Physics, Chemistry, Biology, and English.
-# i am using html template and f-string for standard 1-4 and i will use % string for standard 5-10 and i will be using format method for printting standard 11-12 marksheet.
 
-subject_list = {
-    'Primary': ['Maths', 'Science', 'English', 'Hindi'],
-    'Middle': ['Maths', 'Science', 'English', 'Hindi', 'History', 'Geography'],
-    'High': ['Maths', 'Physics', 'Chemistry', 'Biology', 'English']
-}
 
+# Determine level and formatter based on standard
 if standard <= 4:
-    level = 'Primary'
-    formatter = 'f'
+    level = StandardLevel.PRIMARY
 elif 5 <= standard <= 10:
-    level = 'Middle'
-    formatter = '%'
+    level = StandardLevel.MIDDLE
 else:
-    level = 'High'
-    formatter = 'format'
-    
-subject = subject_list[level]
+    level = StandardLevel.HIGH
+
+formatter = level.formatter()
+subject_list = level.subject()
+
+# ============================ MARK ENTRY SECTION ============================ #
+
+# Ask the student to enter marks for subjects relevant to their standard
+print(f"\nHello {f_name} {l_name},\nYou are a {level} school student.\nEnter your marks out of 100:")
+
 marks = {}
-print(f"\nHello {f_name} {l_name}, \nYou are a {level.lower()} school student. \nEnter your marks out of 100 in the following subjects: \n")
-# marks
-for sub in subject:
-    marks[sub] = int(input(f'{sub}:'))
-# Calculate total and percentage    
+for subject in subject_list:
+    marks[subject] = int(input(f"{subject}: "))
+
+# Calculate total marks and percentage
 total = sum(marks.values())
-percentage = round(total / len(subject), 2)
+percentage = round(total / len(subject_list), 2)
+
+# ============================ STYLE + ROW GENERATION ============================ #
 
 style_block = """
 <style>
@@ -71,16 +116,17 @@ style_block = """
 """
 # Generate HTML rows from subjects
 mark_rows = ""
-for sub in subject:
-    mark_rows += f'<tr><th>{sub}</th><td>{marks[sub]}</td></tr>'
- 
-# Add total and percentage rows with blue color
-mark_rows += f"<tr><th> Total </th><td style='color: blue;'>{total}</td></tr>"
-mark_rows += f"<tr><th> Percentage </th><td style='color: blue;'>{percentage}%</td></tr>"   
+for subject in subject_list:
+    mark_rows += f'<tr><th>{subject}</th><td>{marks[subject]}</td></tr>'
+
+# Add total and percentage rows
+mark_rows += f"<tr><th>Total</th><td style='color: blue;'>{total}</td></tr>"
+mark_rows += f"<tr><th>Percentage</th><td style='color: blue;'>{percentage}%</td></tr>"
 
 html_output = ""
 
-if formatter == 'f':
+# Standard 1-4: Use f-string
+if formatter == FormatterType.F:
     html_output = f'''
     <html>
     <head>
@@ -100,7 +146,8 @@ if formatter == 'f':
     </html>
     '''
     
-elif formatter == '%':
+# Standard 5-10: Use % formatting
+elif formatter == FormatterType.PERCENT:
     html_output = '''
     <html>
     <head>
@@ -118,7 +165,8 @@ elif formatter == '%':
     </table>
     </body>
     </html>'''% (style_block, f_name, l_name, standard, mark_rows)
-    
+
+# Standard 11-12: Use .format() method   
 else:
     html_output = '''
     <html>
@@ -138,6 +186,7 @@ else:
     </body>
     </html>'''.format(style_block, f_name, l_name, standard, mark_rows)
 
+# ============================ OUTPUT FILE HANDLING ============================ #
 import webbrowser
 # Save the HTML output to a file
 with open('Marksheet.html', 'w') as f:
